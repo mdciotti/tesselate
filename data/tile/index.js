@@ -14,7 +14,7 @@ Tile.BlueBlock = {
 	randomSetLength: 1,
 	edges: 1,
 	corners: 2,
-	texture: 2,
+	texture: 1,
 	sound: {}
 };
 

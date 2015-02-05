@@ -1,6 +1,6 @@
 /**
- * Graphics Class
- * Abstracts rendering and handles texture importing
+ * Graphics Module
+ * Drawing of shapes and images, management of screen geometry.
  */
 
 var Tile = require('../data/tile/index.js');
@@ -15,6 +15,10 @@ Graphics.prototype.newImage = function (url, callback) {
 	image.addEventListener('load', function (e) {
 		callback.call(this, image);
 	}, false);
+};
+
+Graphics.prototype.drawImage = function (image) {
+	
 };
 
 module.exports = Graphics;

@@ -18,7 +18,11 @@ var TileSet = function (opts) {
 };
 
 TileSet.prototype.load = function (imgURL) {
+	// TODO: actually preload images, this doesn't
+	// work unless the image is pre-specified in HTML
 	this.image.src = imgURL;
+	this.image.style.display = "none";
+	document.body.appendChild(this.image);
 };
 
 module.exports = TileSet;

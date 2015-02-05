@@ -1,0 +1,39 @@
+{
+  "name": "tesseract",
+  "version": "0.0.0",
+  "description": "A modular tilemap engine",
+  "main": "src/main.js",
+  "dependencies": {
+    "gulp-concat": "~2.3.4",
+    "gulp-connect": "~2.0.6",
+    "gulp": "~3.8.7",
+    "browserify": "~5.10.0",
+    "gulp-uglify": "~0.3.1",
+    "image-loadr": "~0.0.3",
+    "gulp-streamify": "~0.0.5",
+    "gulp-sourcemaps": "~1.1.1",
+    "kb-controls": "~0.2.0",
+    "node-uuid": "~1.4.1",
+    "underscore": "~1.6.0",
+    "uglify-js": "~2.4.15",
+    "vinyl-source-stream": "~0.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdciotti/tesseract.git"
+  },
+  "keywords": [
+    "tilemap",
+    "game",
+    "engine"
+  ],
+  "author": "Maxwell Ciotti",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/mdciotti/tesseract/issues"
+  }
+}

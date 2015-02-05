@@ -35,6 +35,7 @@ Scene.prototype.centerAt = function (x, y) {
 	this.viewBox[1] = y - this.viewBox[3] / 2;
 };
 
+// TODO: change this to return ndarray (use observer?)
 Scene.prototype.getDataInView = function () {
 	var k = this.world.tileSize * this.scale;
 	var tileX = Math.floor(this.viewBox[0] / this.world.tileSize),
@@ -44,10 +45,13 @@ Scene.prototype.getDataInView = function () {
 		data = [],
 		y, x, yData;
 
+	// TODO: actually get correct layer
+	var layer = this.world.layers[0];
+
 	for (y = tileY; y < endY; y++) {
 		yData = [];
 		for (x = tileX; x < endX; x++) {
-			yData.push(this.world.getTile(x, y));
+			yData.push(layer.getTile(x, y));
 		}
 		data.push(yData);
 	}

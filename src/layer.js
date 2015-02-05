@@ -5,7 +5,8 @@
 var uuid = require('node-uuid');
 var _ = require('underscore');
 var ndarray = require('ndarray');
-var zeros = require('zeros');
+var pool = require('ndarray-scratch');
+var util = require('./utilities.js');
 
 var Layer = function (opts) {
 	opts = _.defaults(opts, {
@@ -19,7 +20,7 @@ var Layer = function (opts) {
 	});
 	_.extend(this, opts);
 	this.id = uuid.v4();
-	this.data = zeros([this.width, this.height]);
+	this.data = pool.malloc([this.width, this.height]);
 };
 
 Layer.prototype.inject = function (offsetX, offsetY, data) {
@@ -37,14 +38,14 @@ Layer.prototype.inject = function (offsetX, offsetY, data) {
 Layer.prototype.setDimensions = function (width, height) {
 	this.width = width;
 	this.height = height;
-	this.data = zeros([this.width, this.height]);
+	this.data = pool.malloc([this.width, this.height]);
 };
 
 Layer.prototype.getTile = function (x, y) {
 	// If accessed out of layer bounds, wrap around
 	// alternatively, we could return nothing
-	y = util.flooredDivision(y, this.data.length);
-	x = util.flooredDivision(x, this.data[0].length);
+	y = util.flooredDivision(y, this.data.shape[1]);
+	x = util.flooredDivision(x, this.data.shape[0]);
 	return this.data.get(x, y);
 };
 

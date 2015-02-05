@@ -83,6 +83,7 @@ Engine.prototype.render = function () {
 			ctx.drawImage(map.terrain, sourceX, sourceY, map.tileSize[0], map.tileSize[1], minX + c*multX, minY + r*multY, multX, multY);
 		}
 	}
+	console.log("done!");
 };
 
 Engine.prototype.init = function () {
@@ -132,7 +133,7 @@ game.map.current.data = [
 	[Tile.Air.main, Tile.Stone.edge.W, Tile.Stone.main, Tile.Stone.concave.SE, Tile.Stone.main, Tile.Stone.main, Tile.Stone.edge.E],
 	[Tile.Air.main, Tile.Stone.convex.SW, Tile.Stone.edge.S, Tile.Stone.convex.SE, Tile.Stone.edge.S, Tile.Stone.edge.S, Tile.Stone.convex.SE]
 ];
-game.map.current.setTerrain("terrain.png");
+game.map.current.setTerrain("sprites/terrain.png");
 // game.render();
 
 		</script>

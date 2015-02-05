@@ -11,7 +11,8 @@ gulp.task('webserver', function () {
 	connect.server();
 });
 
-gulp.task('browserify', ['webserver'], function () {
+// gulp.task('browserify', ['webserver'], function () {
+gulp.task('browserify', [], function () {
 	var bundleStream = browserify('./src/main.js', { debug: true }).bundle();
 
 	bundleStream
@@ -22,7 +23,8 @@ gulp.task('browserify', ['webserver'], function () {
 		.pipe(gulp.dest('./build'));
 });
 
-gulp.task('default', ['webserver'], function () {
+// gulp.task('default', ['webserver'], function () {
+gulp.task('default', [], function () {
 	gulp.src('./src/**/*.js')
 		.pipe(sourcemaps.init())
 			.pipe(concat('game.js'))

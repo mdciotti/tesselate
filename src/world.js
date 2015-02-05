@@ -9,7 +9,7 @@ var _ = require('underscore');
 var Layer = require('./layer.js');
 var TileSet = require('./tileset.js');
 var Field = require('ndarray-continuous');
-var Observer = require('continuous-observer');
+// var Observer = require('continuous-observer');
 
 var CHUNK_SIZE = 16;
 

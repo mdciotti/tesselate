@@ -14,7 +14,7 @@ Tesseract.setup(function () {
 	});
 
 	var tileset = new Tesseract.TileSet({ tileSize: 8 });
-	tileset.load('/sprites/terrain.png');
+	tileset.load('sprites/terrain.png');
 
 	var tileLayer = new Tesseract.Layer({
 		height: 7,
@@ -32,7 +32,7 @@ Tesseract.setup(function () {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	]);
 
-	// world1.add(tileSet);
+	world1.add(tileset);
 	world1.add(tileLayer);
 
 	Tesseract.scene.setWorld(world1);

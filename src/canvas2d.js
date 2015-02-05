@@ -2,17 +2,12 @@
  * Provides methods to render the game onto an HTML5 canvas
  */
 
-var hasProp = function (obj, prop) {
-	// return obj.hasOwnProperty(prop); // Works for non-prototyped properties
-	// return prop in obj; // Works for all properties
-	return !!obj[prop]; // Seems to work fastest
-}
-
 var Tile = require('../data/tile/index.js');
+var util = require('./utilities.js');
 
 // Sets image smoothing property on canvas context
 function setImageSmoothing(context, state) {
-	makePrefixArray('imageSmoothingEnabled')
+	makePrefixArray('imageSmoothingEnabled', ['moz', 'o'])
 		.forEach(function (prop) {
 			if (prop in context) context[prop] = state;
 		});
@@ -20,7 +15,7 @@ function setImageSmoothing(context, state) {
 
 // High dpi screen (BackingStorePixelRatio, only in Safari so far)
 function hasBSPRGreaterThanOne(context) {
-	var prefixedProperties = makePrefixArray('backingStorePixelRatio');
+	var prefixedProperties = makePrefixArray('backingStorePixelRatio', ['moz', 'webkit', 'o']);
 	var prop;
 
 	for (var i = 0, l = prefixedProperties.length; i < l; i++) {
@@ -31,8 +26,8 @@ function hasBSPRGreaterThanOne(context) {
 }
 
 // Creates an array of vendor-prefixed properties (JS)
-function makePrefixArray(propName) {
-	var prefixedProperties = ['moz', 'webkit', 'o'].map(function (prefix) {
+function makePrefixArray(propName, prefixes) {
+	var prefixedProperties = prefixes.map(function (prefix) {
 		return prefix + propName[0].toUpperCase() + propName.slice(1);
 	});
 	prefixedProperties.unshift(propName);
@@ -115,7 +110,14 @@ Canvas2DRenderer.prototype.paintTile = function (scene, tileY, tileX, x, y) {
 		sourceY = world.tileSize * tileY,
 		destX = -offsetX * scene.scale + x * k,
 		destY = -offsetY * scene.scale + y * k;
-	this.context.drawImage(world.terrain, sourceX, sourceY, world.tileSize, world.tileSize, destX, destY, k, k);
+
+	// TODO: actually load correct tile set?
+	var img = world.tileSets[0].image;
+	this.context.drawImage(img, sourceX, sourceY, world.tileSize, world.tileSize, destX, destY, k, k);
+	// if (tileY) {
+	// 	this.context.fillStyle = "#ff00ff";
+	// 	this.context.fillRect(destX, destY, k, k);
+	// }
 };
 
 Canvas2DRenderer.prototype.clear = function (color) {	
@@ -127,12 +129,16 @@ Canvas2DRenderer.prototype.draw = function (scene) {
 	
 	this.clear("#000000");
 
+	// TODO: expect data to be ndarray
 	var data = scene.getDataInView();
 
 	// Draw terrain
 	var tile, column, cornerConfig, seed,
 		rows = data.length,
 		cols = data[0].length;
+
+	// TODO: actually load correct layer
+	var layer = scene.world.layers[0];
 
 	// 1. Draw background(s)
 	// 2. Draw wall tiles
@@ -146,8 +152,10 @@ Canvas2DRenderer.prototype.draw = function (scene) {
 	// find transitions
 	// transitions = scene.world.findTransitions(data);
 	
+	// TODO: actually load proper tile data
 	tileData = Tile.WoodPanel;
 
+	// TODO: switch to layer.iterate(function (tile, c, r) {});
 	for (r = 0; r < rows; r++) {
 		for (c = 0; c < cols; c++) {
 			tile = data[r][c];
@@ -157,7 +165,7 @@ Canvas2DRenderer.prototype.draw = function (scene) {
 
 			// Choose correct column
 			if (tileData.isPipe) {
-				column = scene.world.edgeConfig(c, r);
+				column = layer.edgeConfig(c, r);
 			} else if (tileData.hasAnimation) {
 
 			} else if (tileData.randomSetLength > 1) {
@@ -175,15 +183,15 @@ Canvas2DRenderer.prototype.draw = function (scene) {
 		}
 	}
 
-	var hasEdges = hasProp(tileData, "edges") && tileData.edges > 0;
-	var hasCorners = hasProp(tileData, "corners") && tileData.corners > 0;
+	var hasEdges = util.hasProp(tileData, "edges") && tileData.edges > 0;
+	var hasCorners = util.hasProp(tileData, "corners") && tileData.corners > 0;
 
 	if (hasEdges || hasCorners) {
 		// Decorations
 		for (r = 0; r < rows; r++) {
 			for (c = 0; c < cols; c++) {
 				tile = data[r][c];
-				edgeConfig = scene.world.edgeConfig(c, r);
+				edgeConfig = layer.edgeConfig(c, r);
 
 				if (tile === 0) {
 					if (hasEdges) {
@@ -193,7 +201,7 @@ Canvas2DRenderer.prototype.draw = function (scene) {
 					}
 					if (hasCorners) {
 						// Paint corners
-						cornerConfig = scene.world.cornerConfig(c, r);
+						cornerConfig = layer.cornerConfig(c, r);
 						this.paintTile(scene, tileData.texture + tileData.corners, cornerConfig, c, r);
 					}
 				}

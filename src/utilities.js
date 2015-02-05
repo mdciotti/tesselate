@@ -45,4 +45,10 @@ util.XHR = function (url, mime, callback) {
 	req.send(null);
 };
 
+util.hasProp = function (obj, prop) {
+	// return obj.hasOwnProperty(prop); // Works for non-prototyped properties
+	// return prop in obj; // Works for all properties
+	return !!obj[prop]; // Seems to work fastest
+}
+
 module.exports = util;
