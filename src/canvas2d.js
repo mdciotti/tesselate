@@ -2,8 +2,8 @@
  * Provides methods to render the game onto an HTML5 canvas
  */
 
-var Tile = require('../data/tile/index.js');
 var util = require('./utilities.js');
+var _ = require('underscore');
 
 // Sets image smoothing property on canvas context
 function setImageSmoothing(context, state) {
@@ -103,21 +103,15 @@ Canvas2DRenderer.prototype.setSize = function (width, height) {
 
 Canvas2DRenderer.prototype.paintTile = function (scene, tileY, tileX, x, y) {
 	var world = scene.world;
-	var offsetX = scene.viewBox[0] % world.tileSize,
-		offsetY = scene.viewBox[1] % world.tileSize;
-	var k = world.tileSize * scene.scale,
-		sourceX = world.tileSize * tileX,
-		sourceY = world.tileSize * tileY,
-		destX = -offsetX * scene.scale + x * k,
-		destY = -offsetY * scene.scale + y * k;
+	var k = world.tileSize * scene.scale;
+	var sourceX = world.tileSize * tileX,
+		sourceY = world.tileSize * tileY;
+	var destX = -scene.viewBox[0] + x * k,
+		destY = -scene.viewBox[1] + y * k;
 
 	// TODO: actually load correct tile set?
 	var img = world.tileSets[0].image;
 	this.context.drawImage(img, sourceX, sourceY, world.tileSize, world.tileSize, destX, destY, k, k);
-	// if (tileY) {
-	// 	this.context.fillStyle = "#ff00ff";
-	// 	this.context.fillRect(destX, destY, k, k);
-	// }
 };
 
 Canvas2DRenderer.prototype.clear = function (color) {	
@@ -125,89 +119,52 @@ Canvas2DRenderer.prototype.clear = function (color) {
 	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
-Canvas2DRenderer.prototype.draw = function (scene) {
-	
-	this.clear("#000000");
-
-	// TODO: expect data to be ndarray
-	var data = scene.getDataInView();
-
-	// Draw terrain
-	var tile, column, cornerConfig, seed,
-		rows = data.length,
-		cols = data[0].length;
-
-	// TODO: actually load correct layer
-	var layer = scene.world.layers[0];
-
-	// 1. Draw background(s)
-	// 2. Draw wall tiles
-	// 3. Draw tiles
-	// 4. Draw entities
-	// 5. Draw tile transitions
-	// 6. Draw effects
-	// TODO: for transitions, use tile precedence
-	// TODO: lighting
-	
-	// find transitions
-	// transitions = scene.world.findTransitions(data);
-	
-	// TODO: actually load proper tile data
-	tileData = Tile.WoodPanel;
-
-	// TODO: switch to layer.iterate(function (tile, c, r) {});
-	for (r = 0; r < rows; r++) {
-		for (c = 0; c < cols; c++) {
-			tile = data[r][c];
-
-			// Skip if void
-			if (tile === 0 || typeof tile === "undefined") continue;
-
-			// Choose correct column
-			if (tileData.isPipe) {
-				column = layer.edgeConfig(c, r);
-			} else if (tileData.hasAnimation) {
-
-			} else if (tileData.randomSetLength > 1) {
-				// TODO: random tile should be stored in chunk data
-				// set random column using tile coordinates as seed
-				column = Math.floor(Math.random() * tileData.randomSetLength);
-				// solution: randomize once per chunk load and store (with tile transitions)
-				// column = scene.lcg.rand(c ^ r | tileData.id) % tileData.randomSetLength;
-			} else {
-				column = 0;
-			}
-
-			// Paint tile
-			this.paintTile(scene, tileData.texture, column, c, r);
-		}
+Canvas2DRenderer.prototype.drawText = function (str, x, y, opts) {
+	this.context.save();
+	if (typeof opts === "undefined") { opts = {}; }
+	opts = _.defaults(opts, {
+		fontSize: 16,
+		fontFamily: "monospace",
+		color: "#ffffff",
+		baseline: "top",
+		align: "left",
+		backgroundColor: "#000000",
+		backgroundOpacity: 0,
+		backgroundPadding: 0
+	});
+	// TODO: assert options are valid
+	this.context.font = opts.fontSize + "px " + opts.fontFamily;
+	this.context.textBaseline = opts.baseline;
+	this.context.textAlign = opts.align;
+	if (opts.backgroundOpacity > 0) {
+		this.context.save();
+		var bp = opts.backgroundPadding;
+		var textMetrics = this.context.measureText(str);
+		this.context.globalAlpha = opts.backgroundOpacity;
+		this.context.fillStyle = opts.backgroundColor;
+		this.context.fillRect(x - bp, y - bp, textMetrics.width + bp*2, opts.fontSize + bp*2);
+		this.context.restore();
 	}
+	this.context.fillStyle = opts.color;
+	this.context.fillText(str, x, y);
+	this.context.restore();
+};
 
-	var hasEdges = util.hasProp(tileData, "edges") && tileData.edges > 0;
-	var hasCorners = util.hasProp(tileData, "corners") && tileData.corners > 0;
-
-	if (hasEdges || hasCorners) {
-		// Decorations
-		for (r = 0; r < rows; r++) {
-			for (c = 0; c < cols; c++) {
-				tile = data[r][c];
-				edgeConfig = layer.edgeConfig(c, r);
-
-				if (tile === 0) {
-					if (hasEdges) {
-						// Paint edges
-						// world.layer['transition'].storeData(c, r, tileData.texture, edgeConfig);
-						this.paintTile(scene, tileData.texture + tileData.edges, edgeConfig, c, r);
-					}
-					if (hasCorners) {
-						// Paint corners
-						cornerConfig = layer.cornerConfig(c, r);
-						this.paintTile(scene, tileData.texture + tileData.corners, cornerConfig, c, r);
-					}
-				}
-			}
-		}
-	}
+Canvas2DRenderer.prototype.drawPlainText = function (strings, x, y, opts) {
+	this.context.save();
+	if (typeof opts === "undefined") { opts = {}; }
+	opts = _.defaults(opts, {
+		fontSize: 16,
+		fontFamily: "monospace",
+		color: "#ffffff"
+	});
+	// TODO: assert options are valid
+	this.context.font = opts.fontSize + "px " + opts.fontFamily;
+	this.context.fillStyle = opts.color;
+	strings.forEach(function (str, i) {
+		this.context.fillText(str, x, y + (i + 1) * opts.fontSize);
+	}.bind(this));
+	this.context.restore();
 };
 
 module.exports = Canvas2DRenderer;

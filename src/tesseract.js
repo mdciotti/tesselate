@@ -8,7 +8,9 @@ var Canvas2DRenderer = require('./canvas2d.js'),
 	World = require('./world.js'),
 	kb = require('kb-controls'),
 	TileSet = require('./tileset.js'),
-	Layer = require('./layer.js');
+	Layer = require('./layer.js'),
+	GameGUI = require('./gui.js'),
+	DebugInfo = require('./debug.js');
 
 // var Engine = function () {
 // 	var renderer = new Canvas2DRenderer();
@@ -17,7 +19,7 @@ var Canvas2DRenderer = require('./canvas2d.js'),
 // };
 
 var Tesseract = {
-	inputMap: null,
+	input: null,
 	scene: null,
 	World: World,
 	Keyboard: kb,
@@ -35,7 +37,9 @@ Tesseract.setup = function (setup) {
 Tesseract.initialize = function () {
 	var renderer = new Canvas2DRenderer();
 	Tesseract.scene = new Scene(renderer);
-	Tesseract.inputMap = new InputMap();
+	Tesseract.input = new InputMap();
+	Tesseract.debug = new DebugInfo();
+	Tesseract.gui = new GameGUI(renderer);
 };
 
 module.exports = Tesseract;

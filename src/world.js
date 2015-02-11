@@ -3,15 +3,10 @@
  * and manipulating the world data
  */
 
-var util = require('./utilities.js');
 var uuid = require('node-uuid');
 var _ = require('underscore');
 var Layer = require('./layer.js');
 var TileSet = require('./tileset.js');
-var Field = require('ndarray-continuous');
-// var Observer = require('continuous-observer');
-
-var CHUNK_SIZE = 16;
 
 var World = function (opts) {
 	opts = _.defaults(opts, {
@@ -26,13 +21,6 @@ var World = function (opts) {
 	this.layers = [];
 	this.tileSets = [];
 	this.setDimensions(this.width, this.height);
-	this.data = Field({
-		shape: [CHUNK_SIZE, CHUNK_SIZE],
-		getter: function (position, done) {
-			// TODO: load chunks from storage
-			return done(null, zeros([CHUNK_SIZE, CHUNK_SIZE]));
-		}
-	});
 };
 
 World.prototype.add = function (obj) {
@@ -52,6 +40,19 @@ World.prototype.setDimensions = function (width, height) {
 
 World.prototype.setBackground = function (imgURL) {
 	this.background.src = imgURL;
+};
+
+World.prototype.finalize = function () {
+	this.layers.forEach(function (layer) {
+		layer.generateCache();
+	});
+	this.sortLayers();
+};
+
+World.prototype.sortLayers = function () {
+	this.layers.sort(function (layerA, layerB) {
+		return layerA.tileData.precedence - layerB.tileData.precedence;
+	});
 };
 
 // TODO:

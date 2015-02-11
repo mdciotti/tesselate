@@ -1,5 +1,5 @@
 /* Tile Data Declarations
- * Coordinates the various game subsystems
+ * Ideally this will be a JSON to be loaded and parsed
  */
 
 var Tile = {};

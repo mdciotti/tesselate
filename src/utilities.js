@@ -6,7 +6,7 @@ var util = {};
 
 util.flooredDivision = function (a, n) {
 	return a - n * Math.floor(a / n);
-}
+};
 
 /* Linear Congruential Generator */
 util.LCG = function (seed, m) {
