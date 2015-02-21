@@ -1,27 +1,31 @@
-/**
+/* Tilemap Editor
  * Main script entry point
  */
 
-var Tesseract = require('./tesseract.js');
-var util = require('./utilities.js');
-var Tile = require('../data/tile/index.js');
+var Tesseract = require('./lib/tesseract.js');
+var Tilemap = require('./lib/tilemap.js');
+var Tileset = require('./lib/tileset.js');
+var Layer = require('./lib/layer.js');
+var util = require('./lib/utilities.js');
+var Tile = require('./data/tile/index.js');
+
+var kb = require('kb-controls');
 var ndarray = require('ndarray');
 var fps = require('fps');
 	
 Tesseract.setup(function () {
-	console.log('Initializing...');
 
-	var world1 = new Tesseract.World({
-		name: "Test World",
+	var tilemap1 = new Tilemap({
+		name: "Test Tilemap",
 		width: 32,
 		height: 20
 	});
 
-	var tileset = new Tesseract.TileSet({ tileSize: 8 });
+	var tileset = new Tileset({ tileWidth: 8, tileHeight: 8 });
 	tileset.load("sprites/terrain.png");
 
-	var woodLayer = new Tesseract.Layer({
-		name: "Wood Layer",
+	var woodLayer = new Layer({
+		name: "Wood",
 		width: 32,
 		height: 20
 	});
@@ -85,7 +89,7 @@ Tesseract.setup(function () {
 
 
 	// // SPACE INVADER
-	var invaderLayer = new Tesseract.Layer({
+	var invaderLayer = new Layer({
 		name: "Invader Layer",
 		width: 32,
 		height: 20
@@ -116,19 +120,18 @@ Tesseract.setup(function () {
 	// 		var layer = new Tesseract.Layer({ width: 32, height: 20 });
 	// 		layer.setTileType(Tile[tileData]);
 	// 		layer.inject(i, i, threeSquare);
-	// 		world1.add(layer);
+	// 		tilemap1.add(layer);
 	// 		++i;
 	// 	}
 	// }
 
-	world1.add(tileset);
-	world1.add(woodLayer);
-	world1.add(invaderLayer);
-	world1.finalize();
+	tilemap1.addTileset(tileset);
+	tilemap1.addLayer(woodLayer);
+	tilemap1.addLayer(invaderLayer);
+	tilemap1.finalize();
 
-	Tesseract.scene.setWorld(world1);
-	Tesseract.scene.setScale(4);
-	// Tesseract.scene.draw();
+	Tesseract.scene.setTileMap(tilemap1);
+	// Tesseract.scene.setScale(4);
 
 	var MOUSE = Tesseract.input.MOUSE;
 	var mouseIsDown = false;
@@ -173,6 +176,10 @@ Tesseract.setup(function () {
 		}
 	});
 
+	var running = true;
+	var paused = false;
+	var debug = false;
+
 	Tesseract.input.disableContextMenu();
 
 	var KEY = Tesseract.input.KEY;
@@ -187,34 +194,17 @@ Tesseract.setup(function () {
 		paused = !paused;
 	});
 	Tesseract.input.onKeyUp(KEY.MINUS, function (e) {
-		// TODO: center zoom-out
 		var oldScale = Tesseract.scene.scale;
 		Tesseract.scene.setScale(Math.max(2, oldScale - 1));
-		// var oldk = oldScale * world1.tileSize;
-		// var k = Tesseract.scene.scale * world1.tileSize;
-		// var oldWidth = Tesseract.scene.viewBox[2] / oldk;
-		// var oldHeight = Tesseract.scene.viewBox[3] / oldk;
-		// var width = Tesseract.scene.viewBox[2] / k;
-		// var height = Tesseract.scene.viewBox[3] / k;
-		// Tesseract.scene.viewBox[0] += Math.floor(k * (oldWidth - width) / 2);
-		// Tesseract.scene.viewBox[1] += Math.floor(k * (oldHeight - height) / 2);
 	});
 	Tesseract.input.onKeyUp(KEY.PLUS, function (e) {
-		// TODO: center zoom-in
 		var oldScale = Tesseract.scene.scale;
 		Tesseract.scene.setScale(Math.min(8, oldScale + 1));
-		// var oldk = oldScale * world1.tileSize;
-		// var k = Tesseract.scene.scale * world1.tileSize;
-		// var oldWidth = Tesseract.scene.viewBox[2] / oldk;
-		// var oldHeight = Tesseract.scene.viewBox[3] / oldk;
-		// var width = Tesseract.scene.viewBox[2] / k;
-		// var height = Tesseract.scene.viewBox[3] / k;
-		// Tesseract.scene.viewBox[0] += Math.floor(k * (oldWidth - width) / 2);
-		// Tesseract.scene.viewBox[1] += Math.floor(k * (oldHeight - height) / 2);
+	});
+	Tesseract.input.onKeyUp(KEY.BACKTICK, function (e) {
+		debug = !debug;
 	});
 
-	var running = true;
-	var paused = false;
 	var ticker = fps({ every: 10, decay: 0.5 });
 	var fpsString;
 
@@ -222,9 +212,10 @@ Tesseract.setup(function () {
 		return "(" + Tesseract.scene.viewBox.join(", ") + ")";
 	});
 	Tesseract.debug.add("Offset", function () {
-		var k = world1.tileSize * Tesseract.scene.scale;
-		var x = util.flooredDivision(Tesseract.scene.viewBox[0], k);
-		var y = util.flooredDivision(Tesseract.scene.viewBox[1], k);
+		var kx = tilemap1.tileWidth * Tesseract.scene.scale;
+		var ky = tilemap1.tileHeight * Tesseract.scene.scale;
+		var x = util.flooredDivision(Tesseract.scene.viewBox[0], kx);
+		var y = util.flooredDivision(Tesseract.scene.viewBox[1], ky);
 		return "(" + x + ", " + y + ")";
 	});
 	Tesseract.debug.add("Mouse Drag", function () {
@@ -236,8 +227,11 @@ Tesseract.setup(function () {
 	Tesseract.debug.add("Paused", function () {
 		return paused ? "true" : "false";
 	});
+	Tesseract.debug.add("Zoom", function () {
+		return Tesseract.scene.scale;
+	});
 	// Tesseract.debug.add("Tiles painted", function () {
-	// 	// var k = world1.tileSize * Tesseract.scene.scale;
+	// 	// var k = tilemap1.tileSize * Tesseract.scene.scale;
 	// 	// var width = Math.floor(Tesseract.scene.viewBox[2] / k) + 1;
 	// 	// var height = Math.floor(Tesseract.scene.viewBox[3] / k) + 1;
 	// 	// return width * height;
@@ -268,8 +262,27 @@ Tesseract.setup(function () {
 			// Tesseract.gui.draw();
 		}
 
-		ticker.tick();
-		Tesseract.debug.displayAllStrings(Tesseract.scene.renderer);
+		if (debug) {
+			ticker.tick();
+			Tesseract.debug.displayAllStrings(Tesseract.scene.renderer);
+			var ctx = Tesseract.scene.renderer.context;
+			// Viewport center
+			ctx.fillStyle = "#0000ff";
+			ctx.beginPath();
+			var x = Tesseract.scene.viewBox[2] / 2;
+			var y = Tesseract.scene.viewBox[3] / 2;
+			ctx.arc(x, y, 10, 0, Math.PI * 2, false);
+			ctx.fill();
+			// Tilemap center
+			ctx.fillStyle = "#00ff00";
+			ctx.beginPath();
+			// x = -Tesseract.scene.viewBox[0] + Tesseract.scene.scale * tilemap1.width * tilemap1.tileWidth / 2;
+			// y = -Tesseract.scene.viewBox[1] + Tesseract.scene.scale * tilemap1.height * tilemap1.tileHeight / 2;
+			x = -Tesseract.scene.viewBox[0] + Tesseract.scene.viewBox[2] / 2;
+			y = -Tesseract.scene.viewBox[1] + Tesseract.scene.viewBox[3] / 2;
+			ctx.arc(x, y, 10, 0, Math.PI * 2, false);
+			ctx.fill();
+		}
 
 		mouseDragX = 0;
 		mouseDragY = 0;

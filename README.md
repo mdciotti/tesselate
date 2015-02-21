@@ -1,14 +1,14 @@
 Tesseract Tile Engine
 =====================
 
-Tesseract is a 2D tilemap engine written in Javascript. It is comprised of several modules:
+Tesseract is a 2D tilemap engine and editor written in Javascript. It is comprised of several modules:
 
-+ *tesseract-world* - Stores world data in layers and provides an interface to accessing and manipulating the world data
-+ *tesseract-layer* - Provides methods to add and remove tiles from a layer
-+ *tesseract-scene* - Abstracts the rendering code
-+ *tesseract-canvas2d* - Renders the tilemap to an HTML5 canvas
-+ *tesseract-webgl* - Renders the tilemap to a WebGL context
-+ *tesseract-util* - Contains several common methods used in tesseract
++ `tesseract-world` - stores world data in layers and provides an interface to accessing and manipulating the world data
++ `tesseract-layer` - provides methods to add and remove tiles from a layer
++ `tesseract-scene` - abstracts the rendering code
++ `tesseract-canvas2d` - renders the tilemap to an HTML5 canvas
++ `tesseract-webgl` - renders the tilemap to a WebGL context
++ `tesseract-util` - contains several common methods used in tesseract
 
 Please note: tesseract is in active and volatile development; it is not intended to be used in any production environments for now.
 
@@ -28,41 +28,45 @@ To build tesseract for production, use `npm run build`.
 To-do
 -----
 
-* Use chunked map loading
-* Implement sparse array storage
-* Implement continuous (infinite) worlds
-* Write WebGL renderer
-* Implement level saving/export/import
-* Rebuild local edge/corner cache on world edit
++ Use chunked map loading
++ Implement sparse array storage
++ Implement continuous (infinite) worlds
++ Write WebGL renderer
++ Implement level saving/export/import
++ Rebuild local edge/corner cache on world edit
++ Documentation
++ Load tileset tiles from arbitrary places (define template?)
++ Optimizations
++ Merge layers (save topmost) for Tilemap.finalize() ?? -- what about transparent blocks/layers?
 
 Thanks
 ------
 
-* [David Michael](http://www.gamedev.net/page/resources/_/technical/game-programming/tilemap-based-game-techniques-handling-terrai-r934)
++ [David Michael](http://www.gamedev.net/page/resources/_/technical/game-programming/tilemap-based-game-techniques-handling-terrai-r934)
 
 Helpful Links
 -------------
 
-* http://www.metanetsoftware.com/technique/tutorialA.html#section1
-* http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/
-* https://www.youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X
++ http://www.metanetsoftware.com/technique/tutorialA.html#section1
++ http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/
++ https://www.youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X
 
 Resources
 ---------
 
-* https://github.com/mikolalysenko/ndarray
-* https://github.com/hughsk/ndarray-continuous
-* https://github.com/hughsk/continuous-observer
-* https://github.com/hughsk/game-modules/wiki/Modules
-* https://github.com/andrewrk/chem
-* https://github.com/maxogden/level.js
-* https://github.com/chrisdickinson/collide-2d-tilemap
-* https://github.com/andrewrk/node-tmx-parser/blob/master/index.js
++ https://github.com/mikolalysenko/ndarray
++ https://github.com/hughsk/ndarray-continuous
++ https://github.com/hughsk/continuous-observer
++ https://github.com/hughsk/game-modules/wiki/Modules
++ https://github.com/andrewrk/chem
++ https://github.com/maxogden/level.js
++ https://github.com/chrisdickinson/collide-2d-tilemap
++ https://github.com/andrewrk/node-tmx-parser/blob/master/index.js
 
-* http://www-cs-students.stanford.edu/~amitp/gameprog.html
-* http://crtrdg.com/
-* https://gist.github.com/maxogden/9557700#file-index-js
-* https://www.npmjs.org/package/cave-automata-2d
++ http://www-cs-students.stanford.edu/~amitp/gameprog.html
++ http://crtrdg.com/
++ https://gist.github.com/maxogden/9557700#file-index-js
++ https://www.npmjs.org/package/cave-automata-2d
 
 License
 -------

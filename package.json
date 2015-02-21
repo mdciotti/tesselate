@@ -2,7 +2,7 @@
   "name": "tesseract",
   "version": "0.0.0",
   "description": "A modular tilemap engine",
-  "main": "src/main.js",
+  "main": "index.js",
   "dependencies": {
     "browserify": "~5.10.0",
     "image-loadr": "~0.0.3",
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify src/main.js -o build/bundle.js",
-    "serve": "beefy src/main.js:build/bundle.js"
+    "build": "browserify index.js -o build/bundle.js",
+    "serve": "beefy index.js:build/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "engine",
     "editor"
   ],
-  "author": "Maxwell Ciotti",
+  "author": "Maxwell Ciotti <max@mdc.io> (http://www.mdc.io)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mdciotti/tesseract/issues"
