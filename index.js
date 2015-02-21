@@ -2,7 +2,7 @@
  * Main script entry point
  */
 
-var Tesseract = require('./lib/tesseract.js');
+var Tesselate = require('./lib/tesselate.js');
 var Tilemap = require('./lib/tilemap.js');
 var Tileset = require('./lib/tileset.js');
 var Layer = require('./lib/layer.js');
@@ -13,7 +13,7 @@ var kb = require('kb-controls');
 var ndarray = require('ndarray');
 var fps = require('fps');
 	
-Tesseract.setup(function () {
+Tesselate.setup(function () {
 
 	var tilemap1 = new Tilemap({
 		name: "Test Tilemap",
@@ -117,7 +117,7 @@ Tesseract.setup(function () {
 	// var i = 2;
 	// for (var tileData in Tile) {
 	// 	if (util.hasProp(Tile, tileData)) {
-	// 		var layer = new Tesseract.Layer({ width: 32, height: 20 });
+	// 		var layer = new Tesselate.Layer({ width: 32, height: 20 });
 	// 		layer.setTileType(Tile[tileData]);
 	// 		layer.inject(i, i, threeSquare);
 	// 		tilemap1.add(layer);
@@ -130,10 +130,10 @@ Tesseract.setup(function () {
 	tilemap1.addLayer(invaderLayer);
 	tilemap1.finalize();
 
-	Tesseract.scene.setTileMap(tilemap1);
-	// Tesseract.scene.setScale(4);
+	Tesselate.scene.setTileMap(tilemap1);
+	// Tesselate.scene.setScale(4);
 
-	var MOUSE = Tesseract.input.MOUSE;
+	var MOUSE = Tesselate.input.MOUSE;
 	var mouseIsDown = false;
 	var mouseX = 0;
 	var mouseY = 0;
@@ -142,13 +142,13 @@ Tesseract.setup(function () {
 	var mouseDragX = 0;
 	var mouseDragY = 0;
 
-	Tesseract.input.onMouseDown(MOUSE.LEFT, function (e) {
+	Tesselate.input.onMouseDown(MOUSE.LEFT, function (e) {
 		mouseIsDown = true;
 		mouseX = e.clientX;
 		mouseY = e.clientY;
 	});
 
-	Tesseract.input.onMouseUp(MOUSE.LEFT, function (e) {
+	Tesselate.input.onMouseUp(MOUSE.LEFT, function (e) {
 		mouseIsDown = false;
 		mouseDX = 0;
 		mouseDY = 0;
@@ -156,7 +156,7 @@ Tesseract.setup(function () {
 		mouseY = e.clientY;
 	});
 
-	Tesseract.input.onMouseMove(MOUSE.ANY, function (e) {
+	Tesselate.input.onMouseMove(MOUSE.ANY, function (e) {
 		mouseX = e.clientX;
 		mouseY = e.clientY;
 
@@ -180,63 +180,63 @@ Tesseract.setup(function () {
 	var paused = false;
 	var debug = false;
 
-	Tesseract.input.disableContextMenu();
+	Tesselate.input.disableContextMenu();
 
-	var KEY = Tesseract.input.KEY;
-	Tesseract.input.onKeyUp(KEY.BACKSPACE, function (e) {
+	var KEY = Tesselate.input.KEY;
+	Tesselate.input.onKeyUp(KEY.BACKSPACE, function (e) {
 		e.preventDefault();
 		return false;
 	});
-	Tesseract.input.onKeyUp(KEY.ESCAPE, function (e) {
+	Tesselate.input.onKeyUp(KEY.ESCAPE, function (e) {
 		running = false;
 	});
-	Tesseract.input.onKeyUp(KEY.SPACE, function (e) {
+	Tesselate.input.onKeyUp(KEY.SPACE, function (e) {
 		paused = !paused;
 	});
-	Tesseract.input.onKeyUp(KEY.MINUS, function (e) {
-		var oldScale = Tesseract.scene.scale;
-		Tesseract.scene.setScale(Math.max(2, oldScale - 1));
+	Tesselate.input.onKeyUp(KEY.MINUS, function (e) {
+		var oldScale = Tesselate.scene.scale;
+		Tesselate.scene.setScale(Math.max(2, oldScale - 1));
 	});
-	Tesseract.input.onKeyUp(KEY.PLUS, function (e) {
-		var oldScale = Tesseract.scene.scale;
-		Tesseract.scene.setScale(Math.min(8, oldScale + 1));
+	Tesselate.input.onKeyUp(KEY.PLUS, function (e) {
+		var oldScale = Tesselate.scene.scale;
+		Tesselate.scene.setScale(Math.min(8, oldScale + 1));
 	});
-	Tesseract.input.onKeyUp(KEY.BACKTICK, function (e) {
+	Tesselate.input.onKeyUp(KEY.BACKTICK, function (e) {
 		debug = !debug;
 	});
 
 	var ticker = fps({ every: 10, decay: 0.5 });
 	var fpsString;
 
-	Tesseract.debug.add("View Box", function () {
-		return "(" + Tesseract.scene.viewBox.join(", ") + ")";
+	Tesselate.debug.add("View Box", function () {
+		return "(" + Tesselate.scene.viewBox.join(", ") + ")";
 	});
-	Tesseract.debug.add("Offset", function () {
-		var kx = tilemap1.tileWidth * Tesseract.scene.scale;
-		var ky = tilemap1.tileHeight * Tesseract.scene.scale;
-		var x = util.flooredDivision(Tesseract.scene.viewBox[0], kx);
-		var y = util.flooredDivision(Tesseract.scene.viewBox[1], ky);
+	Tesselate.debug.add("Offset", function () {
+		var kx = tilemap1.tileWidth * Tesselate.scene.scale;
+		var ky = tilemap1.tileHeight * Tesselate.scene.scale;
+		var x = util.flooredDivision(Tesselate.scene.viewBox[0], kx);
+		var y = util.flooredDivision(Tesselate.scene.viewBox[1], ky);
 		return "(" + x + ", " + y + ")";
 	});
-	Tesseract.debug.add("Mouse Drag", function () {
+	Tesselate.debug.add("Mouse Drag", function () {
 		return "(" + mouseDragX + ", " + mouseDragY + ")";
 	});
-	Tesseract.debug.add("Mouse Pos", function () {
+	Tesselate.debug.add("Mouse Pos", function () {
 		return "(" + mouseX + ", " + mouseY + ")";
 	});
-	Tesseract.debug.add("Paused", function () {
+	Tesselate.debug.add("Paused", function () {
 		return paused ? "true" : "false";
 	});
-	Tesseract.debug.add("Zoom", function () {
-		return Tesseract.scene.scale;
+	Tesselate.debug.add("Zoom", function () {
+		return Tesselate.scene.scale;
 	});
-	// Tesseract.debug.add("Tiles painted", function () {
-	// 	// var k = tilemap1.tileSize * Tesseract.scene.scale;
-	// 	// var width = Math.floor(Tesseract.scene.viewBox[2] / k) + 1;
-	// 	// var height = Math.floor(Tesseract.scene.viewBox[3] / k) + 1;
+	// Tesselate.debug.add("Tiles painted", function () {
+	// 	// var k = tilemap1.tileSize * Tesselate.scene.scale;
+	// 	// var width = Math.floor(Tesselate.scene.viewBox[2] / k) + 1;
+	// 	// var height = Math.floor(Tesselate.scene.viewBox[3] / k) + 1;
 	// 	// return width * height;
 	// });
-	Tesseract.debug.add("Framerate (f/s)", function () {
+	Tesselate.debug.add("Framerate (f/s)", function () {
 		return fpsString;
 	});
 	ticker.on("data", function (framerate) {
@@ -249,37 +249,37 @@ Tesseract.setup(function () {
 		requestAnimationFrame(loop);
 
 		if (mouseIsDown) {
-			Tesseract.scene.viewBox[0] -= mouseDragX;
-			Tesseract.scene.viewBox[1] -= mouseDragY;
+			Tesselate.scene.viewBox[0] -= mouseDragX;
+			Tesselate.scene.viewBox[1] -= mouseDragY;
 		}
 
-		Tesseract.scene.clear();
+		Tesselate.scene.clear();
 
 		if (paused) {
-			// Tesseract.gui.overlay();
+			// Tesselate.gui.overlay();
 		} else {
-			Tesseract.scene.draw();
-			// Tesseract.gui.draw();
+			Tesselate.scene.draw();
+			// Tesselate.gui.draw();
 		}
 
 		if (debug) {
 			ticker.tick();
-			Tesseract.debug.displayAllStrings(Tesseract.scene.renderer);
-			var ctx = Tesseract.scene.renderer.context;
+			Tesselate.debug.displayAllStrings(Tesselate.scene.renderer);
+			var ctx = Tesselate.scene.renderer.context;
 			// Viewport center
 			ctx.fillStyle = "#0000ff";
 			ctx.beginPath();
-			var x = Tesseract.scene.viewBox[2] / 2;
-			var y = Tesseract.scene.viewBox[3] / 2;
+			var x = Tesselate.scene.viewBox[2] / 2;
+			var y = Tesselate.scene.viewBox[3] / 2;
 			ctx.arc(x, y, 10, 0, Math.PI * 2, false);
 			ctx.fill();
 			// Tilemap center
 			ctx.fillStyle = "#00ff00";
 			ctx.beginPath();
-			// x = -Tesseract.scene.viewBox[0] + Tesseract.scene.scale * tilemap1.width * tilemap1.tileWidth / 2;
-			// y = -Tesseract.scene.viewBox[1] + Tesseract.scene.scale * tilemap1.height * tilemap1.tileHeight / 2;
-			x = -Tesseract.scene.viewBox[0] + Tesseract.scene.viewBox[2] / 2;
-			y = -Tesseract.scene.viewBox[1] + Tesseract.scene.viewBox[3] / 2;
+			// x = -Tesselate.scene.viewBox[0] + Tesselate.scene.scale * tilemap1.width * tilemap1.tileWidth / 2;
+			// y = -Tesselate.scene.viewBox[1] + Tesselate.scene.scale * tilemap1.height * tilemap1.tileHeight / 2;
+			x = -Tesselate.scene.viewBox[0] + Tesselate.scene.viewBox[2] / 2;
+			y = -Tesselate.scene.viewBox[1] + Tesselate.scene.viewBox[3] / 2;
 			ctx.arc(x, y, 10, 0, Math.PI * 2, false);
 			ctx.fill();
 		}

@@ -1,29 +1,29 @@
-Tesseract Tile Engine
+Tesselate Tile Engine
 =====================
 
-Tesseract is a 2D tilemap engine and editor written in Javascript. It is comprised of several modules:
+Tesselate is a 2D tilemap engine and editor written in Javascript. It is comprised of several modules:
 
-+ `tesseract-world` - stores world data in layers and provides an interface to accessing and manipulating the world data
-+ `tesseract-layer` - provides methods to add and remove tiles from a layer
-+ `tesseract-scene` - abstracts the rendering code
-+ `tesseract-canvas2d` - renders the tilemap to an HTML5 canvas
-+ `tesseract-webgl` - renders the tilemap to a WebGL context
-+ `tesseract-util` - contains several common methods used in tesseract
++ `tesselate-world` - stores world data in layers and provides an interface to accessing and manipulating the world data
++ `tesselate-layer` - provides methods to add and remove tiles from a layer
++ `tesselate-scene` - abstracts the rendering code
++ `tesselate-canvas2d` - renders the tilemap to an HTML5 canvas
++ `tesselate-webgl` - renders the tilemap to a WebGL context
++ `tesselate-util` - contains several common methods used in tesselate
 
-Please note: tesseract is in active and volatile development; it is not intended to be used in any production environments for now.
+Please note: tesselate is in active and volatile development; it is not intended to be used in any production environments for now.
 
 Building
 --------
 
 This project uses [Browserify](http://browserify.org/) to compile all source scripts into a single browser-ready bundle.
 
-To build tesseract for development, I use [beefy](http://didact.us/beefy/). To test in a browser, simply run the following command in a terminal where [npm](https://www.npmjs.com/) is available and then navigate to [127.0.0.1:9966](http://127.0.0.1:9966).
+To build tesselate for development, I use [beefy](http://didact.us/beefy/). To test in a browser, simply run the following command in a terminal where [npm](https://www.npmjs.com/) is available and then navigate to [127.0.0.1:9966](http://127.0.0.1:9966).
 
 ```
 npm run serve
 ```
 
-To build tesseract for production, use `npm run build`.
+To build tesselate for production, use `npm run build`.
 
 To-do
 -----

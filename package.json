@@ -1,5 +1,5 @@
 {
-  "name": "tesseract",
+  "name": "tesselate",
   "version": "0.0.0",
   "description": "A modular tilemap engine",
   "main": "index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mdciotti/tesseract.git"
+    "url": "https://github.com/mdciotti/tesselate.git"
   },
   "keywords": [
     "tilemap",
@@ -31,6 +31,6 @@
   "author": "Maxwell Ciotti <max@mdc.io> (http://www.mdc.io)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mdciotti/tesseract/issues"
+    "url": "https://github.com/mdciotti/tesselate/issues"
   }
 }
