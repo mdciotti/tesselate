@@ -107,7 +107,7 @@ Tesselate.setup(function () {
 		0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0
 	], [11, 8], [1, 11]));
 
-	// Precedence test
+	// // Tile test
 	// var threeSquare = ndarray([
 	// 	1, 1, 1,
 	// 	1, 1, 1,
@@ -117,10 +117,10 @@ Tesselate.setup(function () {
 	// var i = 2;
 	// for (var tileData in Tile) {
 	// 	if (util.hasProp(Tile, tileData)) {
-	// 		var layer = new Tesselate.Layer({ width: 32, height: 20 });
+	// 		var layer = new Layer({ width: 32, height: 20 });
 	// 		layer.setTileType(Tile[tileData]);
-	// 		layer.inject(i, i, threeSquare);
-	// 		tilemap1.add(layer);
+	// 		layer.inject(4*i - 7, 1, threeSquare);
+	// 		tilemap1.addLayer(layer);
 	// 		++i;
 	// 	}
 	// }
